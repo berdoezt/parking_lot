@@ -5,3 +5,10 @@
 #
 # After this is run, bin/parking_lot
 # should Just Work.
+
+sudo apt install mockgen
+dep ensure -v
+go generate
+
+
+go build
