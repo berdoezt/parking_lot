@@ -81,17 +81,17 @@ func (_mr *MockStoreMockRecorder) GetAvailableSlot() *gomock.Call {
 	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "GetAvailableSlot", reflect.TypeOf((*MockStore)(nil).GetAvailableSlot))
 }
 
-// GetCarAttribute mocks base method
-func (_m *MockStore) GetCarAttribute(_param0 parkinglot.AttributeType, _param1 parkinglot.FilterType) (parkinglot.Car, error) {
-	ret := _m.ctrl.Call(_m, "GetCarAttribute", _param0, _param1)
-	ret0, _ := ret[0].(parkinglot.Car)
+// GetCars mocks base method
+func (_m *MockStore) GetCars(_param0 parkinglot.FilterType) ([]parkinglot.Car, error) {
+	ret := _m.ctrl.Call(_m, "GetCars", _param0)
+	ret0, _ := ret[0].([]parkinglot.Car)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetCarAttribute indicates an expected call of GetCarAttribute
-func (_mr *MockStoreMockRecorder) GetCarAttribute(arg0, arg1 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "GetCarAttribute", reflect.TypeOf((*MockStore)(nil).GetCarAttribute), arg0, arg1)
+// GetCars indicates an expected call of GetCars
+func (_mr *MockStoreMockRecorder) GetCars(arg0 interface{}) *gomock.Call {
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "GetCars", reflect.TypeOf((*MockStore)(nil).GetCars), arg0)
 }
 
 // GetSlotNumbers mocks base method

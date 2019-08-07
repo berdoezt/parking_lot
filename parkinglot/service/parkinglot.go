@@ -45,12 +45,32 @@ func (s *Service) GetStatus() ([]parkinglot.Parking, error) {
 
 // GetRegistrationNumbersByColor get registration numbers by color
 func (s *Service) GetRegistrationNumbersByColor(color string) ([]string, error) {
-	return []string{}, nil
+	result := make([]string, 0)
+
+	cars, err := s.store.GetCars(parkinglot.FilterTypeColor)
+	if err != nil {
+		return result, err
+	}
+
+	for _, car := range cars {
+		result = append(result, car.RegistrationNumber)
+	}
+
+	return result, nil
 }
 
 // GetSlotNumbersByColor get slot numbers by color
 func (s *Service) GetSlotNumbersByColor(color string) ([]int64, error) {
-	return []int64{}, nil
+	result := make([]int64, 0)
+
+	slots, err := s.store.GetSlotNumbers(parkinglot.FilterTypeColor)
+	if err != nil {
+		return result, err
+	}
+
+	result = append(result, slots...)
+
+	return result, nil
 }
 
 // GetSlotNumberByRegistrationNumber get slot number by registration number

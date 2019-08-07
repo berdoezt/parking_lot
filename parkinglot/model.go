@@ -17,8 +17,6 @@ type (
 type (
 	// FilterType denotes the parking filter type
 	FilterType int
-	// AttributeType denotes the car attribute
-	AttributeType int
 )
 
 const (
@@ -29,14 +27,4 @@ const (
 
 	// FilterTypeRegistrationNumber registration number filter
 	FilterTypeRegistrationNumber
-)
-
-const (
-	_ AttributeType = iota
-
-	// AttributeTypeColor color attribute
-	AttributeTypeColor
-
-	// AttributeTypeRegistrationNumber registration number attribute
-	AttributeTypeRegistrationNumber
 )

@@ -29,9 +29,9 @@ func (s *Store) GetStatus() ([]parkinglot.Parking, error) {
 	return nil, nil
 }
 
-// GetCarAttribute get car attribute with filter
-func (s *Store) GetCarAttribute(attribute parkinglot.AttributeType, filter parkinglot.FilterType) (parkinglot.Car, error) {
-	return parkinglot.Car{}, nil
+// GetCars get cars based on filter
+func (s *Store) GetCars(filter parkinglot.FilterType) ([]parkinglot.Car, error) {
+	return []parkinglot.Car{}, nil
 }
 
 // GetSlotNumbers get slot number with filter
