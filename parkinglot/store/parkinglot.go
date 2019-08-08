@@ -30,11 +30,11 @@ func (s *Store) GetStatus() ([]parkinglot.Parking, error) {
 }
 
 // GetCars get cars based on filter
-func (s *Store) GetCars(filter parkinglot.FilterType) ([]parkinglot.Car, error) {
+func (s *Store) GetCars(filter parkinglot.FilterType, value interface{}) ([]parkinglot.Car, error) {
 	return []parkinglot.Car{}, nil
 }
 
 // GetSlotNumbers get slot number with filter
-func (s *Store) GetSlotNumbers(filter parkinglot.FilterType) ([]int64, error) {
+func (s *Store) GetSlotNumbers(filter parkinglot.FilterType, value interface{}) ([]int64, error) {
 	return nil, nil
 }

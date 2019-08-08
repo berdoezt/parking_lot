@@ -82,29 +82,29 @@ func (_mr *MockStoreMockRecorder) GetAvailableSlot() *gomock.Call {
 }
 
 // GetCars mocks base method
-func (_m *MockStore) GetCars(_param0 parkinglot.FilterType) ([]parkinglot.Car, error) {
-	ret := _m.ctrl.Call(_m, "GetCars", _param0)
+func (_m *MockStore) GetCars(_param0 parkinglot.FilterType, _param1 interface{}) ([]parkinglot.Car, error) {
+	ret := _m.ctrl.Call(_m, "GetCars", _param0, _param1)
 	ret0, _ := ret[0].([]parkinglot.Car)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetCars indicates an expected call of GetCars
-func (_mr *MockStoreMockRecorder) GetCars(arg0 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "GetCars", reflect.TypeOf((*MockStore)(nil).GetCars), arg0)
+func (_mr *MockStoreMockRecorder) GetCars(arg0, arg1 interface{}) *gomock.Call {
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "GetCars", reflect.TypeOf((*MockStore)(nil).GetCars), arg0, arg1)
 }
 
 // GetSlotNumbers mocks base method
-func (_m *MockStore) GetSlotNumbers(_param0 parkinglot.FilterType) ([]int64, error) {
-	ret := _m.ctrl.Call(_m, "GetSlotNumbers", _param0)
+func (_m *MockStore) GetSlotNumbers(_param0 parkinglot.FilterType, _param1 interface{}) ([]int64, error) {
+	ret := _m.ctrl.Call(_m, "GetSlotNumbers", _param0, _param1)
 	ret0, _ := ret[0].([]int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSlotNumbers indicates an expected call of GetSlotNumbers
-func (_mr *MockStoreMockRecorder) GetSlotNumbers(arg0 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "GetSlotNumbers", reflect.TypeOf((*MockStore)(nil).GetSlotNumbers), arg0)
+func (_mr *MockStoreMockRecorder) GetSlotNumbers(arg0, arg1 interface{}) *gomock.Call {
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "GetSlotNumbers", reflect.TypeOf((*MockStore)(nil).GetSlotNumbers), arg0, arg1)
 }
 
 // GetStatus mocks base method

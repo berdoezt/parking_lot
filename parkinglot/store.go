@@ -9,6 +9,6 @@ type Store interface {
 	FreeSlot(slotID int64) error
 	GetAvailableSlot() (int64, error)
 	GetStatus() ([]Parking, error)
-	GetCars(filter FilterType) ([]Car, error)
-	GetSlotNumbers(filter FilterType) ([]int64, error)
+	GetCars(filter FilterType, value interface{}) ([]Car, error)
+	GetSlotNumbers(filter FilterType, value interface{}) ([]int64, error)
 }

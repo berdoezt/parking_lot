@@ -188,7 +188,7 @@ func TestService_GetRegistrationNumbersByColor(t *testing.T) {
 			RegistrationNumber: "KA-01-BB-0001",
 		},
 		parkinglot.Car{
-			Color:              "black",
+			Color:              "white",
 			RegistrationNumber: "KA-01-HH-7777",
 		},
 	}
@@ -211,7 +211,10 @@ func TestService_GetRegistrationNumbersByColor(t *testing.T) {
 		{
 			name: "#1 car exists",
 			mockFunc: func() {
-				mockStore.EXPECT().GetCars(parkinglot.FilterTypeColor).Return(cars, nil)
+				mockStore.EXPECT().GetCars(parkinglot.FilterTypeColor, gomock.Any()).Return(cars, nil)
+			},
+			args: args{
+				color: "white",
 			},
 			want:    expected,
 			wantErr: false,
@@ -219,7 +222,10 @@ func TestService_GetRegistrationNumbersByColor(t *testing.T) {
 		{
 			name: "#2 car don't exist",
 			mockFunc: func() {
-				mockStore.EXPECT().GetCars(parkinglot.FilterTypeColor).Return([]parkinglot.Car{}, nil)
+				mockStore.EXPECT().GetCars(parkinglot.FilterTypeColor, gomock.Any()).Return([]parkinglot.Car{}, nil)
+			},
+			args: args{
+				color: "black",
 			},
 			want:    []string{},
 			wantErr: false,
@@ -227,7 +233,10 @@ func TestService_GetRegistrationNumbersByColor(t *testing.T) {
 		{
 			name: "#3 error",
 			mockFunc: func() {
-				mockStore.EXPECT().GetCars(parkinglot.FilterTypeColor).Return([]parkinglot.Car{}, err)
+				mockStore.EXPECT().GetCars(parkinglot.FilterTypeColor, gomock.Any()).Return([]parkinglot.Car{}, err)
+			},
+			args: args{
+				color: "black",
 			},
 			want:    []string{},
 			wantErr: true,
@@ -268,7 +277,10 @@ func TestService_GetSlotNumbersByColor(t *testing.T) {
 		{
 			name: "#1 slot numbers exists",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor).Return([]int64{1, 2, 3}, nil)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor, gomock.Any()).Return([]int64{1, 2, 3}, nil)
+			},
+			args: args{
+				color: "white",
 			},
 			want:    []int64{1, 2, 3},
 			wantErr: false,
@@ -276,15 +288,21 @@ func TestService_GetSlotNumbersByColor(t *testing.T) {
 		{
 			name: "#2 slot numbers don't exists",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor).Return([]int64{}, nil)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor, gomock.Any()).Return([]int64{}, err)
+			},
+			args: args{
+				color: "black",
 			},
 			want:    []int64{},
-			wantErr: false,
+			wantErr: true,
 		},
 		{
 			name: "#3 error",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor).Return([]int64{}, err)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor, gomock.Any()).Return([]int64{}, err)
+			},
+			args: args{
+				color: "black",
 			},
 			want:    []int64{},
 			wantErr: true,
@@ -313,7 +331,7 @@ func TestService_GetSlotNumberByRegistrationNumber(t *testing.T) {
 	service := New(mockStore)
 
 	type args struct {
-		color string
+		registrationNumber string
 	}
 	tests := []struct {
 		name     string
@@ -323,17 +341,34 @@ func TestService_GetSlotNumberByRegistrationNumber(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "#1 slot numbers exists",
+			name: "#1 slot number exists",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber).Return(5, nil)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]int64{5}, nil)
+			},
+			args: args{
+				registrationNumber: "KH-1234",
 			},
 			want:    5,
 			wantErr: false,
 		},
 		{
-			name: "#2 error",
+			name: "#2 slot not found",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber).Return(0, err)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]int64{}, err)
+			},
+			args: args{
+				registrationNumber: "KH-1234",
+			},
+			want:    0,
+			wantErr: true,
+		},
+		{
+			name: "#3 duplicate registration number",
+			mockFunc: func() {
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]int64{1, 3}, err)
+			},
+			args: args{
+				registrationNumber: "KH-1234",
 			},
 			want:    0,
 			wantErr: true,
@@ -342,13 +377,13 @@ func TestService_GetSlotNumberByRegistrationNumber(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockFunc()
-			got, err := service.GetSlotNumbersByColor(tt.args.color)
+			got, err := service.GetSlotNumberByRegistrationNumber(tt.args.registrationNumber)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Service.GetSlotNumbersByColor() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Service.GetSlotNumberByRegistrationNumber() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Service.GetSlotNumbersByColor() = %v, want %v", got, tt.want)
+				t.Errorf("Service.GetSlotNumberByRegistrationNumber() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/parking_lot/parkinglot"
 )
 
@@ -47,7 +49,7 @@ func (s *Service) GetStatus() ([]parkinglot.Parking, error) {
 func (s *Service) GetRegistrationNumbersByColor(color string) ([]string, error) {
 	result := make([]string, 0)
 
-	cars, err := s.store.GetCars(parkinglot.FilterTypeColor)
+	cars, err := s.store.GetCars(parkinglot.FilterTypeColor, color)
 	if err != nil {
 		return result, err
 	}
@@ -63,7 +65,7 @@ func (s *Service) GetRegistrationNumbersByColor(color string) ([]string, error) 
 func (s *Service) GetSlotNumbersByColor(color string) ([]int64, error) {
 	result := make([]int64, 0)
 
-	slots, err := s.store.GetSlotNumbers(parkinglot.FilterTypeColor)
+	slots, err := s.store.GetSlotNumbers(parkinglot.FilterTypeColor, color)
 	if err != nil {
 		return result, err
 	}
@@ -75,5 +77,17 @@ func (s *Service) GetSlotNumbersByColor(color string) ([]int64, error) {
 
 // GetSlotNumberByRegistrationNumber get slot number by registration number
 func (s *Service) GetSlotNumberByRegistrationNumber(registrationNumber string) (int64, error) {
-	return 0, nil
+	var result int64
+
+	slots, err := s.store.GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, registrationNumber)
+	if err != nil {
+		return result, err
+	}
+
+	if len(slots) > 1 {
+		return result, errors.New("duplicate registration number")
+	}
+
+	result = slots[0]
+	return result, nil
 }
