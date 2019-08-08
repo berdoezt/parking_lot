@@ -7,17 +7,21 @@ import (
 )
 
 // Park parking a car to available slot
-func (s *Service) Park(car parkinglot.Car) error {
+func (s *Service) Park(car parkinglot.Car) (int64, error) {
+	var result int64
+
 	slotID, err := s.store.GetAvailableSlot()
 	if err != nil {
-		return err
+		return result, err
 	}
 
 	if err := s.store.FillSlot(slotID, car); err != nil {
-		return err
+		return result, err
 	}
 
-	return nil
+	result = slotID
+
+	return result, nil
 }
 
 // Leave car leaving slot

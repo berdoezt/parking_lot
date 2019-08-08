@@ -109,10 +109,11 @@ func (_mr *MockServiceMockRecorder) Leave(arg0 interface{}) *gomock.Call {
 }
 
 // Park mocks base method
-func (_m *MockService) Park(_param0 parkinglot.Car) error {
+func (_m *MockService) Park(_param0 parkinglot.Car) (int64, error) {
 	ret := _m.ctrl.Call(_m, "Park", _param0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Park indicates an expected call of Park

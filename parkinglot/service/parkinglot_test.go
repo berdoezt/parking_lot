@@ -74,6 +74,7 @@ func TestService_Park(t *testing.T) {
 		name     string
 		mockFunc func()
 		args     args
+		want     int64
 		wantErr  bool
 	}{
 		{
@@ -88,6 +89,7 @@ func TestService_Park(t *testing.T) {
 					RegistrationNumber: "KA-01-HH-7777",
 				},
 			},
+			want:    5,
 			wantErr: false,
 		},
 		{
@@ -101,6 +103,7 @@ func TestService_Park(t *testing.T) {
 					RegistrationNumber: "KA-01-HH-7777",
 				},
 			},
+			want:    0,
 			wantErr: true,
 		},
 		{
@@ -115,14 +118,20 @@ func TestService_Park(t *testing.T) {
 					RegistrationNumber: "KA-01-HH-7777",
 				},
 			},
+			want:    0,
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockFunc()
-			if err := service.Park(tt.args.car); (err != nil) != tt.wantErr {
+			got, err := service.Park(tt.args.car)
+			if (err != nil) != tt.wantErr {
 				t.Errorf("Service.Park() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Service.Park() = %#v, want %#v", got, tt.want)
 			}
 		})
 	}
@@ -296,17 +305,6 @@ func TestService_GetSlotNumbersByColor(t *testing.T) {
 			want:    []int64{},
 			wantErr: true,
 		},
-		{
-			name: "#3 error",
-			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor, gomock.Any()).Return([]int64{}, err)
-			},
-			args: args{
-				color: "black",
-			},
-			want:    []int64{},
-			wantErr: true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -365,7 +363,7 @@ func TestService_GetSlotNumberByRegistrationNumber(t *testing.T) {
 		{
 			name: "#3 duplicate registration number",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]int64{1, 3}, err)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]int64{1, 3}, nil)
 			},
 			args: args{
 				registrationNumber: "KH-1234",
@@ -398,9 +396,7 @@ func TestService_GetStatus(t *testing.T) {
 		fields  fields
 		want    []parkinglot.Parking
 		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &Service{

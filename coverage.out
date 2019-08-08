@@ -1,0 +1,27 @@
+mode: set
+github.com/parking_lot/parkinglot/service/service.go:13.53,19.2 2 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:10.59,14.16 3 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:18.2,18.54 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:22.2,24.20 2 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:14.16,16.3 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:18.54,20.3 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:28.45,30.16 2 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:34.2,34.12 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:30.16,32.3 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:38.54,40.16 2 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:44.2,44.12 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:40.16,42.3 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:48.61,50.2 1 0
+github.com/parking_lot/parkinglot/service/parkinglot.go:53.81,57.16 3 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:61.2,61.27 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:65.2,65.20 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:57.16,59.3 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:61.27,63.3 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:69.72,73.16 3 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:77.2,79.20 2 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:73.16,75.3 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:83.95,87.16 3 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:91.2,91.20 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:95.2,96.20 2 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:87.16,89.3 1 1
+github.com/parking_lot/parkinglot/service/parkinglot.go:91.20,93.3 1 1
