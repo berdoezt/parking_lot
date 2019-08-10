@@ -46,7 +46,15 @@ func (s *Service) CreateParkingLot(slot int64) error {
 
 // GetStatus get all the parking status
 func (s *Service) GetStatus() ([]parkinglot.Parking, error) {
-	return []parkinglot.Parking{}, nil
+	result := make([]parkinglot.Parking, 0)
+
+	parkingData, err := s.store.GetStatus()
+	if err != nil {
+		return result, err
+	}
+
+	result = parkingData
+	return result, nil
 }
 
 // GetRegistrationNumbersByColor get registration numbers by color
@@ -66,22 +74,20 @@ func (s *Service) GetRegistrationNumbersByColor(color string) ([]string, error) 
 }
 
 // GetSlotNumbersByColor get slot numbers by color
-func (s *Service) GetSlotNumbersByColor(color string) ([]int64, error) {
-	result := make([]int64, 0)
+func (s *Service) GetSlotNumbersByColor(color string) ([]parkinglot.Slot, error) {
+	result := make([]parkinglot.Slot, 0)
 
 	slots, err := s.store.GetSlotNumbers(parkinglot.FilterTypeColor, color)
 	if err != nil {
 		return result, err
 	}
 
-	result = append(result, slots...)
-
-	return result, nil
+	return slots, nil
 }
 
 // GetSlotNumberByRegistrationNumber get slot number by registration number
-func (s *Service) GetSlotNumberByRegistrationNumber(registrationNumber string) (int64, error) {
-	var result int64
+func (s *Service) GetSlotNumberByRegistrationNumber(registrationNumber string) (parkinglot.Slot, error) {
+	var result parkinglot.Slot
 
 	slots, err := s.store.GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, registrationNumber)
 	if err != nil {
@@ -92,6 +98,5 @@ func (s *Service) GetSlotNumberByRegistrationNumber(registrationNumber string) (
 		return result, errors.New("duplicate registration number")
 	}
 
-	result = slots[0]
-	return result, nil
+	return slots[0], nil
 }

@@ -1,6 +1,9 @@
 package parkinglot
 
 type (
+	// Slot denotes parking slot ID
+	Slot int64
+
 	// Car car object
 	Car struct {
 		RegistrationNumber string
@@ -9,7 +12,7 @@ type (
 
 	// Parking parking data object
 	Parking struct {
-		Slot int64
+		Slot
 		Car
 	}
 )

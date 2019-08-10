@@ -9,6 +9,6 @@ type Service interface {
 	Leave(slotID int64) error
 	GetStatus() ([]Parking, error)
 	GetRegistrationNumbersByColor(color string) ([]string, error)
-	GetSlotNumbersByColor(color string) ([]int64, error)
-	GetSlotNumberByRegistrationNumber(registrationNumber string) (int64, error)
+	GetSlotNumbersByColor(color string) ([]Slot, error)
+	GetSlotNumberByRegistrationNumber(registrationNumber string) (Slot, error)
 }

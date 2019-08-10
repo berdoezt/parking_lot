@@ -45,7 +45,7 @@ func (_mr *MockStoreMockRecorder) CreateSlots(arg0 interface{}) *gomock.Call {
 }
 
 // FillSlot mocks base method
-func (_m *MockStore) FillSlot(_param0 int64, _param1 parkinglot.Car) error {
+func (_m *MockStore) FillSlot(_param0 parkinglot.Slot, _param1 parkinglot.Car) error {
 	ret := _m.ctrl.Call(_m, "FillSlot", _param0, _param1)
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -57,7 +57,7 @@ func (_mr *MockStoreMockRecorder) FillSlot(arg0, arg1 interface{}) *gomock.Call 
 }
 
 // FreeSlot mocks base method
-func (_m *MockStore) FreeSlot(_param0 int64) error {
+func (_m *MockStore) FreeSlot(_param0 parkinglot.Slot) error {
 	ret := _m.ctrl.Call(_m, "FreeSlot", _param0)
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -69,9 +69,9 @@ func (_mr *MockStoreMockRecorder) FreeSlot(arg0 interface{}) *gomock.Call {
 }
 
 // GetAvailableSlot mocks base method
-func (_m *MockStore) GetAvailableSlot() (int64, error) {
+func (_m *MockStore) GetAvailableSlot() (parkinglot.Slot, error) {
 	ret := _m.ctrl.Call(_m, "GetAvailableSlot")
-	ret0, _ := ret[0].(int64)
+	ret0, _ := ret[0].(parkinglot.Slot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -95,9 +95,9 @@ func (_mr *MockStoreMockRecorder) GetCars(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // GetSlotNumbers mocks base method
-func (_m *MockStore) GetSlotNumbers(_param0 parkinglot.FilterType, _param1 interface{}) ([]int64, error) {
+func (_m *MockStore) GetSlotNumbers(_param0 parkinglot.FilterType, _param1 interface{}) ([]parkinglot.Slot, error) {
 	ret := _m.ctrl.Call(_m, "GetSlotNumbers", _param0, _param1)
-	ret0, _ := ret[0].([]int64)
+	ret0, _ := ret[0].([]parkinglot.Slot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

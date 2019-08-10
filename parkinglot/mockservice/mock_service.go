@@ -58,9 +58,9 @@ func (_mr *MockServiceMockRecorder) GetRegistrationNumbersByColor(arg0 interface
 }
 
 // GetSlotNumberByRegistrationNumber mocks base method
-func (_m *MockService) GetSlotNumberByRegistrationNumber(_param0 string) (int64, error) {
+func (_m *MockService) GetSlotNumberByRegistrationNumber(_param0 string) (parkinglot.Slot, error) {
 	ret := _m.ctrl.Call(_m, "GetSlotNumberByRegistrationNumber", _param0)
-	ret0, _ := ret[0].(int64)
+	ret0, _ := ret[0].(parkinglot.Slot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -71,9 +71,9 @@ func (_mr *MockServiceMockRecorder) GetSlotNumberByRegistrationNumber(arg0 inter
 }
 
 // GetSlotNumbersByColor mocks base method
-func (_m *MockService) GetSlotNumbersByColor(_param0 string) ([]int64, error) {
+func (_m *MockService) GetSlotNumbersByColor(_param0 string) ([]parkinglot.Slot, error) {
 	ret := _m.ctrl.Call(_m, "GetSlotNumbersByColor", _param0)
-	ret0, _ := ret[0].([]int64)
+	ret0, _ := ret[0].([]parkinglot.Slot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
