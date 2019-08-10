@@ -258,16 +258,30 @@ func TestStore_GetStatus(t *testing.T) {
 
 func TestStore_GetAvailableSlot(t *testing.T) {
 	tests := []struct {
-		name    string
-		s       *Store
-		want    int
-		wantErr bool
+		name                    string
+		want                    int
+		wantErr                 bool
+		isGenerateAvailableSlot bool
 	}{
-		{},
+		{
+			name:    "#1 empty available slot",
+			want:    0,
+			wantErr: true,
+		},
+		{
+			name:                    "#2 available slot exist",
+			want:                    1,
+			wantErr:                 false,
+			isGenerateAvailableSlot: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &Store{}
+
+			if tt.isGenerateAvailableSlot {
+				generateAvailableSlot()
+			}
 			got, err := s.GetAvailableSlot()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Store.GetAvailableSlot() error = %v, wantErr %v", err, tt.wantErr)
@@ -276,6 +290,8 @@ func TestStore_GetAvailableSlot(t *testing.T) {
 			if got != tt.want {
 				t.Errorf("Store.GetAvailableSlot() = %v, want %v", got, tt.want)
 			}
+
+			flushAvailableSlot()
 		})
 	}
 }
