@@ -4,11 +4,11 @@ package parkinglot
 //
 //go:generate mockgen -destination ./mockservice/mock_service.go -package mockservice github.com/parking_lot/parkinglot Service
 type Service interface {
-	CreateParkingLot(sum int64) error
-	Park(car Car) (int64, error)
-	Leave(slotID int64) error
+	CreateParkingLot(sum int) error
+	Park(car Car) (int, error)
+	Leave(slotID int) error
 	GetStatus() ([]Parking, error)
 	GetRegistrationNumbersByColor(color string) ([]string, error)
-	GetSlotNumbersByColor(color string) ([]Slot, error)
-	GetSlotNumberByRegistrationNumber(registrationNumber string) (Slot, error)
+	GetSlotNumbersByColor(color string) ([]int, error)
+	GetSlotNumberByRegistrationNumber(registrationNumber string) (int, error)
 }

@@ -20,7 +20,7 @@ func TestService_CreateParkingLot(t *testing.T) {
 	service := New(mockStore)
 
 	type args struct {
-		slot int64
+		slot int
 	}
 	tests := []struct {
 		name     string
@@ -74,14 +74,14 @@ func TestService_Park(t *testing.T) {
 		name     string
 		mockFunc func()
 		args     args
-		want     int64
+		want     int
 		wantErr  bool
 	}{
 		{
 			name: "#1 normal case",
 			mockFunc: func() {
-				mockStore.EXPECT().GetAvailableSlot().Return(int64(5), nil)
-				mockStore.EXPECT().FillSlot(int64(5), gomock.Any()).Return(nil)
+				mockStore.EXPECT().GetAvailableSlot().Return(5, nil)
+				mockStore.EXPECT().FillSlot(5, gomock.Any()).Return(nil)
 			},
 			args: args{
 				car: parkinglot.Car{
@@ -95,7 +95,7 @@ func TestService_Park(t *testing.T) {
 		{
 			name: "#2 slot is empty",
 			mockFunc: func() {
-				mockStore.EXPECT().GetAvailableSlot().Return(int64(0), err)
+				mockStore.EXPECT().GetAvailableSlot().Return(0, err)
 			},
 			args: args{
 				car: parkinglot.Car{
@@ -109,8 +109,8 @@ func TestService_Park(t *testing.T) {
 		{
 			name: "#3 can't fill parking slot",
 			mockFunc: func() {
-				mockStore.EXPECT().GetAvailableSlot().Return(int64(5), nil)
-				mockStore.EXPECT().FillSlot(int64(5), gomock.Any()).Return(err)
+				mockStore.EXPECT().GetAvailableSlot().Return(5, nil)
+				mockStore.EXPECT().FillSlot(5, gomock.Any()).Return(err)
 			},
 			args: args{
 				car: parkinglot.Car{
@@ -145,7 +145,7 @@ func TestService_Leave(t *testing.T) {
 	service := New(mockStore)
 
 	type args struct {
-		slotID int64
+		slotID int
 	}
 	tests := []struct {
 		name     string
@@ -269,29 +269,29 @@ func TestService_GetSlotNumbersByColor(t *testing.T) {
 		name     string
 		mockFunc func()
 		args     args
-		want     []parkinglot.Slot
+		want     []int
 		wantErr  bool
 	}{
 		{
 			name: "#1 slot numbers exists",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor, gomock.Any()).Return([]parkinglot.Slot{1, 2, 3}, nil)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor, gomock.Any()).Return([]int{1, 2, 3}, nil)
 			},
 			args: args{
 				color: "white",
 			},
-			want:    []parkinglot.Slot{1, 2, 3},
+			want:    []int{1, 2, 3},
 			wantErr: false,
 		},
 		{
 			name: "#2 error",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor, gomock.Any()).Return([]parkinglot.Slot{}, err)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeColor, gomock.Any()).Return([]int{}, err)
 			},
 			args: args{
 				color: "black",
 			},
-			want:    []parkinglot.Slot{},
+			want:    []int{},
 			wantErr: true,
 		},
 	}
@@ -324,13 +324,13 @@ func TestService_GetSlotNumberByRegistrationNumber(t *testing.T) {
 		name     string
 		mockFunc func()
 		args     args
-		want     parkinglot.Slot
+		want     int
 		wantErr  bool
 	}{
 		{
 			name: "#1 slot number exists",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]parkinglot.Slot{5}, nil)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]int{5}, nil)
 			},
 			args: args{
 				registrationNumber: "KH-1234",
@@ -341,7 +341,7 @@ func TestService_GetSlotNumberByRegistrationNumber(t *testing.T) {
 		{
 			name: "#2 error",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]parkinglot.Slot{}, err)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]int{}, err)
 			},
 			args: args{
 				registrationNumber: "KH-1234",
@@ -352,7 +352,7 @@ func TestService_GetSlotNumberByRegistrationNumber(t *testing.T) {
 		{
 			name: "#3 duplicate registration number",
 			mockFunc: func() {
-				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]parkinglot.Slot{1, 3}, nil)
+				mockStore.EXPECT().GetSlotNumbers(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]int{1, 3}, nil)
 			},
 			args: args{
 				registrationNumber: "KH-1234",
