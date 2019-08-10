@@ -114,9 +114,9 @@ func TestStore_FillSlot(t *testing.T) {
 					Color:              "White",
 				},
 			},
-			wantErr:                 false,
-			isGenerateData:          true,
-			isCar:                   false,
+			wantErr:        false,
+			isGenerateData: true,
+			isCar:          false,
 			isGenerateAvailableSlot: true,
 			remainingAvailableSlot:  []int{2, 3, 4, 5},
 			isAvailableSlot:         true,
@@ -292,6 +292,147 @@ func TestStore_GetAvailableSlot(t *testing.T) {
 			}
 
 			flushAvailableSlot()
+		})
+	}
+}
+
+func TestStore_GetCars(t *testing.T) {
+	type args struct {
+		filter parkinglot.FilterType
+		value  interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []parkinglot.Car
+		wantErr bool
+	}{
+		{
+			name: "#1 error car not found with color",
+			args: args{
+				filter: parkinglot.FilterTypeColor,
+				value:  "White",
+			},
+			want:    []parkinglot.Car{},
+			wantErr: true,
+		},
+		{
+			name: "#2 car found with color",
+			args: args{
+				filter: parkinglot.FilterTypeColor,
+				value:  "Black",
+			},
+			want: []parkinglot.Car{
+				parkinglot.Car{
+					RegistrationNumber: "KH-2345",
+					Color:              "Black",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "#3 car found with registration number",
+			args: args{
+				filter: parkinglot.FilterTypeRegistrationNumber,
+				value:  "KH-2345",
+			},
+			want: []parkinglot.Car{
+				parkinglot.Car{
+					RegistrationNumber: "KH-2345",
+					Color:              "Black",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "#3 car not found with registration number",
+			args: args{
+				filter: parkinglot.FilterTypeRegistrationNumber,
+				value:  "KH-23456",
+			},
+			want:    []parkinglot.Car{},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Store{}
+			generateData(true)
+			got, err := s.GetCars(tt.args.filter, tt.args.value)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Store.GetCars() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Store.GetCars() = %v, want %v", got, tt.want)
+			}
+
+			flushData()
+		})
+	}
+}
+
+func TestStore_GetSlotNumbers(t *testing.T) {
+	type args struct {
+		filter parkinglot.FilterType
+		value  interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []int
+		wantErr bool
+	}{
+		{
+			name: "#1 slot not found with color",
+			args: args{
+				filter: parkinglot.FilterTypeColor,
+				value:  "White",
+			},
+			want:    []int{},
+			wantErr: true,
+		},
+		{
+			name: "#2 slot not found with registration number",
+			args: args{
+				filter: parkinglot.FilterTypeRegistrationNumber,
+				value:  "KH-5678",
+			},
+			want:    []int{},
+			wantErr: true,
+		},
+		{
+			name: "#3 slot found with registration number",
+			args: args{
+				filter: parkinglot.FilterTypeRegistrationNumber,
+				value:  "KH-2345",
+			},
+			want:    []int{5},
+			wantErr: false,
+		},
+		{
+			name: "#4 slot found with color",
+			args: args{
+				filter: parkinglot.FilterTypeColor,
+				value:  "Black",
+			},
+			want:    []int{5},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Store{}
+			generateData(true)
+			got, err := s.GetSlotNumbers(tt.args.filter, tt.args.value)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Store.GetSlotNumbers() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Store.GetSlotNumbers() = %v, want %v", got, tt.want)
+			}
+			flushData()
 		})
 	}
 }

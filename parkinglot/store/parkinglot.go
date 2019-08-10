@@ -2,8 +2,10 @@ package store
 
 import (
 	"errors"
-	"github.com/parking_lot/parkinglot"
+	"fmt"
 	"sort"
+
+	"github.com/parking_lot/parkinglot"
 )
 
 var (
@@ -29,16 +31,24 @@ func (s *Store) CreateSlots(sum int) error {
 		id++
 	}
 
+	fmt.Println(AvailableSlot)
+	fmt.Println(Data)
+
 	return nil
 }
 
 // FillSlot fill available slot with car
 func (s *Store) FillSlot(slot int, car parkinglot.Car) error {
-	for _, d := range Data {
+	for i, d := range Data {
 		if d.Slot == slot {
 			if d.Car.RegistrationNumber == "" && d.Car.Color == "" {
-				d.Car = car
+				temp := d
+				temp.Car = car
+				Data[i] = temp
 				AvailableSlot = AvailableSlot[1:]
+
+				fmt.Println(AvailableSlot)
+				fmt.Println(Data)
 				return nil
 			}
 		}
@@ -49,13 +59,18 @@ func (s *Store) FillSlot(slot int, car parkinglot.Car) error {
 
 // FreeSlot empty the slot
 func (s *Store) FreeSlot(slot int) error {
-	for _, d := range Data {
+	for i, d := range Data {
 		if d.Slot == slot {
 			if d.Car.RegistrationNumber != "" || d.Car.Color != "" {
-				d.Car = parkinglot.Car{}
+				temp := d
+				temp.Car = parkinglot.Car{}
+				Data[i] = temp
 				AvailableSlot = append(AvailableSlot, slot)
 
 				sort.Ints(AvailableSlot)
+
+				fmt.Println(AvailableSlot)
+				fmt.Println(Data)
 				return nil
 			}
 		}
@@ -67,7 +82,7 @@ func (s *Store) FreeSlot(slot int) error {
 // GetAvailableSlot get available (empty) slot
 func (s *Store) GetAvailableSlot() (int, error) {
 	if len(AvailableSlot) == 0 {
-		return 0, errors.New("slot not found")
+		return 0, errors.New("Sorry, parking lot is full")
 	}
 
 	return AvailableSlot[0], nil
@@ -84,10 +99,46 @@ func (s *Store) GetStatus() ([]parkinglot.Parking, error) {
 
 // GetCars get cars based on filter
 func (s *Store) GetCars(filter parkinglot.FilterType, value interface{}) ([]parkinglot.Car, error) {
-	return []parkinglot.Car{}, nil
+	result := make([]parkinglot.Car, 0)
+
+	for _, d := range Data {
+		if filter == parkinglot.FilterTypeColor {
+			if d.Car.Color == value {
+				result = append(result, d.Car)
+			}
+		} else if filter == parkinglot.FilterTypeRegistrationNumber {
+			if d.Car.RegistrationNumber == value {
+				result = append(result, d.Car)
+			}
+		}
+	}
+
+	if len(result) == 0 {
+		return result, errors.New("data not found")
+	}
+
+	return result, nil
 }
 
 // GetSlotNumbers get slot number with filter
 func (s *Store) GetSlotNumbers(filter parkinglot.FilterType, value interface{}) ([]int, error) {
-	return nil, nil
+	result := make([]int, 0)
+
+	for _, d := range Data {
+		if filter == parkinglot.FilterTypeColor {
+			if d.Car.Color == value {
+				result = append(result, d.Slot)
+			}
+		} else if filter == parkinglot.FilterTypeRegistrationNumber {
+			if d.Car.RegistrationNumber == value {
+				result = append(result, d.Slot)
+			}
+		}
+	}
+
+	if len(result) == 0 {
+		return result, errors.New("data not found")
+	}
+
+	return result, nil
 }
