@@ -82,6 +82,7 @@ func TestService_Park(t *testing.T) {
 			mockFunc: func() {
 				mockStore.EXPECT().GetAvailableSlot().Return(5, nil)
 				mockStore.EXPECT().FillSlot(5, gomock.Any()).Return(nil)
+				mockStore.EXPECT().GetCars(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]parkinglot.Car{}, err)
 			},
 			args: args{
 				car: parkinglot.Car{
@@ -111,6 +112,27 @@ func TestService_Park(t *testing.T) {
 			mockFunc: func() {
 				mockStore.EXPECT().GetAvailableSlot().Return(5, nil)
 				mockStore.EXPECT().FillSlot(5, gomock.Any()).Return(err)
+				mockStore.EXPECT().GetCars(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]parkinglot.Car{}, err)
+			},
+			args: args{
+				car: parkinglot.Car{
+					Color:              "white",
+					RegistrationNumber: "KA-01-HH-7777",
+				},
+			},
+			want:    0,
+			wantErr: true,
+		},
+		{
+			name: "#4 duplicate car",
+			mockFunc: func() {
+				mockStore.EXPECT().GetAvailableSlot().Return(5, nil)
+				mockStore.EXPECT().GetCars(parkinglot.FilterTypeRegistrationNumber, gomock.Any()).Return([]parkinglot.Car{
+					parkinglot.Car{
+						Color:              "white",
+						RegistrationNumber: "KA-01-HH-7777",
+					},
+				}, nil)
 			},
 			args: args{
 				car: parkinglot.Car{

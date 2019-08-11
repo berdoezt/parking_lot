@@ -2,7 +2,6 @@ package store
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 
 	"github.com/parking_lot/parkinglot"
@@ -31,9 +30,6 @@ func (s *Store) CreateSlots(sum int) error {
 		id++
 	}
 
-	fmt.Println(AvailableSlot)
-	fmt.Println(Data)
-
 	return nil
 }
 
@@ -47,14 +43,12 @@ func (s *Store) FillSlot(slot int, car parkinglot.Car) error {
 				Data[i] = temp
 				AvailableSlot = AvailableSlot[1:]
 
-				fmt.Println(AvailableSlot)
-				fmt.Println(Data)
 				return nil
 			}
 		}
 	}
 
-	return errors.New("slot not found")
+	return errors.New("Not found")
 }
 
 // FreeSlot empty the slot
@@ -69,14 +63,12 @@ func (s *Store) FreeSlot(slot int) error {
 
 				sort.Ints(AvailableSlot)
 
-				fmt.Println(AvailableSlot)
-				fmt.Println(Data)
 				return nil
 			}
 		}
 	}
 
-	return errors.New("slot not found")
+	return errors.New("Not found")
 }
 
 // GetAvailableSlot get available (empty) slot
@@ -91,7 +83,7 @@ func (s *Store) GetAvailableSlot() (int, error) {
 // GetStatus get all the parking status
 func (s *Store) GetStatus() ([]parkinglot.Parking, error) {
 	if len(Data) == 0 {
-		return []parkinglot.Parking{}, errors.New("data not found")
+		return []parkinglot.Parking{}, errors.New("Not found")
 	}
 
 	return Data, nil
@@ -114,7 +106,7 @@ func (s *Store) GetCars(filter parkinglot.FilterType, value interface{}) ([]park
 	}
 
 	if len(result) == 0 {
-		return result, errors.New("data not found")
+		return result, errors.New("Not found")
 	}
 
 	return result, nil
@@ -137,7 +129,7 @@ func (s *Store) GetSlotNumbers(filter parkinglot.FilterType, value interface{}) 
 	}
 
 	if len(result) == 0 {
-		return result, errors.New("data not found")
+		return result, errors.New("Not found")
 	}
 
 	return result, nil

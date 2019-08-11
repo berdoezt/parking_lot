@@ -13,6 +13,11 @@ func (s *Service) Park(car parkinglot.Car) (int, error) {
 		return 0, err
 	}
 
+	c, _ := s.store.GetCars(parkinglot.FilterTypeRegistrationNumber, car.RegistrationNumber)
+	if len(c) > 0 {
+		return 0, errors.New("Duplicate car")
+	}
+
 	if err := s.store.FillSlot(slotID, car); err != nil {
 		return 0, err
 	}
@@ -84,7 +89,7 @@ func (s *Service) GetSlotNumberByRegistrationNumber(registrationNumber string) (
 	}
 
 	if len(slots) > 1 {
-		return 0, errors.New("duplicate registration number")
+		return 0, errors.New("Duplicate car")
 	}
 
 	return slots[0], nil

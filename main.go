@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
+	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/parking_lot/parkinglot"
@@ -10,7 +13,7 @@ import (
 	parkinglotstore "github.com/parking_lot/parkinglot/store"
 )
 
-// available commands
+// available commands known
 const (
 	CommandExit                         = "exit"
 	CommandSlotNumberRegistrationNumber = "slot_number_for_registration_number"
@@ -30,110 +33,183 @@ func init() {
 }
 
 func main() {
-	arg := os.Args
-
-	if len(arg) == 2 {
-		cmdFromFile()
-	} else {
-		cmd()
-	}
-}
-
-func cmd() {
-	p := parkinglot.GetService()
-
 	var (
 		command            string
 		sum                int
 		slotID             int
 		registrationNumber string
 		color              string
+
+		isFile   bool
+		counter  int
+		commands []string
+		line     []string
 	)
+
+	arg := os.Args
+
+	if len(arg) == 2 {
+		isFile = true
+		basePath := fmt.Sprintf("%s/src/github.com/parking_lot/", os.Getenv("GOPATH"))
+		pathToFile := basePath + arg[1]
+
+		data, err := ioutil.ReadFile(pathToFile)
+		if err != nil {
+			panic("file not found")
+		}
+
+		body := string(data)
+		commands = strings.Split(body, "\n")
+	}
+
+	p := parkinglot.GetService()
 
 loop:
 	for {
-		fmt.Scanf("%s", &command)
+		if isFile {
+			line = strings.Split(commands[counter], " ")
+			command = line[0]
+		} else {
+			fmt.Scanf("%s", &command)
+		}
 
 		switch command {
 		case CommandExit:
 			break loop
 		case CommandCreateParkingLot:
-			fmt.Scanf("%d", &sum)
-			err := p.CreateParkingLot(sum)
-			if err != nil {
-				fmt.Println(err)
+			if isFile {
+				sum, _ = strconv.Atoi(line[1])
 			} else {
-				fmt.Printf("Created a parking lot with %d slots\n", sum)
+				fmt.Scanf("%d", &sum)
 			}
+
+			doCreateParkingLot(p, sum)
 		case CommandPark:
-			fmt.Scanf("%s", &registrationNumber)
-			fmt.Scanf("%s", &color)
-
-			slot, err := p.Park(parkinglot.Car{
-				RegistrationNumber: registrationNumber,
-				Color:              color,
-			})
-
-			if err != nil {
-				fmt.Println(err)
+			if isFile {
+				registrationNumber = line[1]
+				color = line[2]
 			} else {
-				fmt.Printf("Allocated slot number: %d\n", slot)
+				fmt.Scanf("%s", &registrationNumber)
+				fmt.Scanf("%s", &color)
 			}
+
+			doPark(p, registrationNumber, color)
 		case CommandLeave:
-			fmt.Scanf("%d", &slotID)
-
-			err := p.Leave(slotID)
-			if err != nil {
-				fmt.Println(err)
+			if isFile {
+				slotID, _ = strconv.Atoi(line[1])
 			} else {
-				fmt.Printf("Slot number %d is free\n", slotID)
+				fmt.Scanf("%d", &slotID)
 			}
+
+			doLeave(p, slotID)
 		case CommandRegistrationNumbersColour:
-			fmt.Scanf("%s", &color)
-
-			result, err := p.GetRegistrationNumbersByColor(color)
-			if err != nil {
-				fmt.Println(err)
+			if isFile {
+				color = line[1]
 			} else {
-				fmt.Println(strings.Join(result, ", "))
+				fmt.Scanf("%s", &color)
 			}
+
+			doRegistrationNumbersColour(p, color)
 		case CommandSlotNumbersColour:
-			fmt.Scanf("%s", &color)
-
-			result, err := p.GetSlotNumbersByColor(color)
-			if err != nil {
-				fmt.Println(err)
+			if isFile {
+				color = line[1]
 			} else {
-				fmt.Println(strings.Trim(strings.Replace(fmt.Sprint(result), " ", ", ", -1), "[]"))
+				fmt.Scanf("%s", &color)
 			}
+
+			doSlotNumbersColour(p, color)
 		case CommandSlotNumberRegistrationNumber:
-			fmt.Scanf("%s", &registrationNumber)
+			if isFile {
+				registrationNumber = line[1]
+			} else {
+				fmt.Scanf("%s", &registrationNumber)
+			}
 
-			result, err := p.GetSlotNumberByRegistrationNumber(registrationNumber)
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				fmt.Println(result)
-			}
+			doSlotNumberRegistrationNumber(p, registrationNumber)
 		case CommandStatus:
-			result, err := p.GetStatus()
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				fmt.Println("Slot No.\tRegistration No\tColour")
-				for _, r := range result {
-					fmt.Printf("%d\t\t%s\t\t%s\n", r.Slot, r.Car.RegistrationNumber, r.Car.Color)
-				}
-			}
+			doStatus(p)
 		default:
 			fmt.Println("command not found")
+		}
+
+		counter++
+		if isFile {
+			if counter == len(commands) {
+				break
+			}
 		}
 
 	}
 }
 
-func cmdFromFile() {
-	p := parkinglot.GetService()
-	fmt.Println(p)
+func doCreateParkingLot(p parkinglot.Service, sum int) {
+	err := p.CreateParkingLot(sum)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("Created a parking lot with %d slots\n", sum)
+	}
+}
 
+func doPark(p parkinglot.Service, registrationNumber, color string) {
+	slot, err := p.Park(parkinglot.Car{
+		RegistrationNumber: registrationNumber,
+		Color:              color,
+	})
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("Allocated slot number: %d\n", slot)
+	}
+}
+
+func doLeave(p parkinglot.Service, slotID int) {
+	err := p.Leave(slotID)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("Slot number %d is free\n", slotID)
+	}
+}
+
+func doRegistrationNumbersColour(p parkinglot.Service, color string) {
+	result, err := p.GetRegistrationNumbersByColor(color)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(strings.Join(result, ", "))
+	}
+}
+
+func doSlotNumbersColour(p parkinglot.Service, color string) {
+	result, err := p.GetSlotNumbersByColor(color)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(strings.Trim(strings.Replace(fmt.Sprint(result), " ", ", ", -1), "[]"))
+	}
+}
+
+func doStatus(p parkinglot.Service) {
+	result, err := p.GetStatus()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Slot No.\tRegistration No\t\tColour")
+		for _, r := range result {
+			if !reflect.DeepEqual(r.Car, parkinglot.Car{}) {
+				fmt.Printf("%d\t\t%s\t\t%s\n", r.Slot, r.Car.RegistrationNumber, r.Car.Color)
+			}
+		}
+	}
+}
+
+func doSlotNumberRegistrationNumber(p parkinglot.Service, registrationNumber string) {
+	result, err := p.GetSlotNumberByRegistrationNumber(registrationNumber)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(result)
+	}
 }
