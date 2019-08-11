@@ -6,9 +6,10 @@
 # After this is run, bin/parking_lot
 # should Just Work.
 
-sudo apt install mockgen
+#!/bin/bash
+
+cd $GOPATH/src/github.com/parking_lot
+
 dep ensure -v
-go generate
-
-
-go build
+go build -o bin/parking_lot
+go test ./...
