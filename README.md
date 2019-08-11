@@ -15,9 +15,9 @@ allocated a parking slot which is nearest to the entry. At the exit the customer
 the ticket which then marks the slot they were using as being available.
 
 Due to government regulation, the system should provide me with the ability to findout:
-● Registration numbers of all cars of a particular colour.
-● Slot number in which a car with a given registration number is parked.
-● Slot numbers of all slots where a car of a particular colour is parked.
+- Registration numbers of all cars of a particular colour.
+- Slot number in which a car with a given registration number is parked.
+- Slot numbers of all slots where a car of a particular colour is parked.
 
 We interact with the system via a simple set of commands which produce a specific
 output. Please take a look at the example below, which includes all the commands
@@ -35,14 +35,83 @@ commands from that file
  - dep `https://github.com/golang/dep`
  - mockgen `https://github.com/golang/mock`
 
- ##### Build
- ```
- ./bin/setup
- ```
+##### How to build
+```
+./bin/setup
+```
 
- ##### Run
- ```
- ./bin/parking_lot
- ./bin/parking_lot <filename.txt>
- ```
+##### How to run
+- For interactive command prompt based shell
+```
+./bin/parking_lot
+```
 
+- For filename as a commands list
+```
+./bin/parking_lot <filename.txt>
+```
+
+##### Available Command
+- `exit` : exit the program 
+- `slot_number_for_registration_number` : getting parking slot number with registration number
+- `slot_numbers_for_cars_with_colour` : getting parking slot numbers with colour
+- `registration_numbers_for_cars_with_colour` : getting car registration number with colour
+- `park` : parking a car on a nearest available parking slot
+- `status` : getting status of current parking lot
+- `leave` : car leaving parking slot
+- `create_parking_lot` : creating parking lot with specific amount
+
+##### Example
+```
+$ create_parking_lot 6
+Created a parking lot with 6 slots
+
+$ park KA-01-HH-1234 White
+Allocated slot number: 1
+
+$ park KA-01-HH-9999 White
+Allocated slot number: 2
+
+$ park KA-01-BB-0001 Black
+Allocated slot number: 3
+
+$ park KA-01-HH-7777 Red
+Allocated slot number: 4
+
+$ park KA-01-HH-2701 Blue
+Allocated slot number: 5
+
+$ park KA-01-HH-3141 Black
+Allocated slot number: 6
+
+$ leave 4
+Slot number 4 is free
+
+$ status
+Slot No.	Registration No		Colour
+1		KA-01-HH-1234		White
+2		KA-01-HH-9999		White
+3		KA-01-BB-0001		Black
+5		KA-01-HH-2701		Blue
+6		KA-01-HH-3141		Black
+
+$ park KA-01-P-333 White
+Allocated slot number: 4
+
+$ park DL-12-AA-9999 White
+Sorry, parking lot is full
+
+$ registration_numbers_for_cars_with_colour White
+KA-01-HH-1234, KA-01-HH-9999, KA-01-P-333
+
+$ slot_numbers_for_cars_with_colour White
+1, 2, 4
+
+$ slot_number_for_registration_number KA-01-HH-3141
+6
+
+$ slot_number_for_registration_number MH-04-AY-1111
+Not found
+
+$ exit
+```
