@@ -36,11 +36,13 @@ commands from that file
  - mockgen `https://github.com/golang/mock`
 
 ##### How to build
-```
-./bin/setup
-```
+- Copy `parking_lot` folder to $GOPATH/src/github.com.
+- Go to $GOPATH/src/github.com/parking_lot and execute `./bin/setup`
+- It will install the vendor, build the binary, and running the unit test.
 
 ##### How to run
+Inside $GOPATH/src/github.com/parking_lot
+
 - For interactive command prompt based shell
 ```
 ./bin/parking_lot

@@ -8,8 +8,6 @@
 
 #!/bin/bash
 
-cd $GOPATH/src/github.com/parking_lot
-
 dep ensure -v
 go build -o bin/parking_lot
 go test ./...
