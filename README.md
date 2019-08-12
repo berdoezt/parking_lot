@@ -36,8 +36,9 @@ commands from that file
  - mockgen `https://github.com/golang/mock`
 
 ##### How to build
-- Copy `parking_lot` folder to $GOPATH/src/github.com.
-- Go to $GOPATH/src/github.com/parking_lot and execute `./bin/setup`
+- Install golang and dep.
+- Copy `parking_lot` folder to `$GOPATH/src/github.com`.
+- Go to `$GOPATH/src/github.com/parking_lot` and execute `./bin/setup`.
 - It will install the vendor, build the binary, and running the unit test.
 
 ##### How to run
@@ -45,12 +46,16 @@ Inside $GOPATH/src/github.com/parking_lot
 
 - For interactive command prompt based shell
 ```
-./bin/parking_lot
+$ ./bin/parking_lot
 ```
 
 - For filename as a commands list
 ```
-./bin/parking_lot <filename.txt>
+$ ./bin/parking_lot <path_to_file_name.txt>
+```
+Path file starting from `$GOPATH/src/github.com/parkinglot`. So, if you place file `file_inputs.txt` in the parkinglot folder, the command will be
+```
+$ ./bin/parking_lot file_inputs.txt
 ```
 
 ##### Available Command
