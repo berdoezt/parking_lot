@@ -50,8 +50,7 @@ func main() {
 
 	if len(arg) == 2 {
 		isFile = true
-		basePath := fmt.Sprintf("%s/src/github.com/parking_lot/", os.Getenv("GOPATH"))
-		pathToFile := basePath + arg[1]
+		pathToFile := arg[1]
 
 		data, err := ioutil.ReadFile(pathToFile)
 		if err != nil {
@@ -196,10 +195,10 @@ func doStatus(p parkinglot.Service) {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("Slot No.\tRegistration No\t\tColour")
+		fmt.Println("Slot No.    Registration No    Colour")
 		for _, r := range result {
 			if !reflect.DeepEqual(r.Car, parkinglot.Car{}) {
-				fmt.Printf("%d\t\t%s\t\t%s\n", r.Slot, r.Car.RegistrationNumber, r.Car.Color)
+				fmt.Printf("%d           %s      %s\n", r.Slot, r.Car.RegistrationNumber, r.Car.Color)
 			}
 		}
 	}
